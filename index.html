@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lala❤️</title>
+<title>lala ❤️</title>
+
+<!-- Handwritten font -->
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -12,14 +15,13 @@ body{
   height:100vh;
   overflow:hidden;
   background:radial-gradient(circle at top,#1b0033,#05010d 70%);
-  color:white;
   font-family:"Segoe UI",sans-serif;
+  color:white;
 }
 
 /* Loader */
 #loader{
-  position:fixed;
-  inset:0;
+  position:fixed;inset:0;
   background:#05010d;
   display:flex;
   align-items:center;
@@ -36,11 +38,10 @@ body{
   position:absolute;
   top:40px;
   right:40px;
-  width:90px;
-  height:90px;
-  background:white;
+  width:90px;height:90px;
+  background:#fff;
   border-radius:50%;
-  box-shadow:0 0 40px rgba(255,255,255,0.8);
+  box-shadow:0 0 40px rgba(255,255,255,.8);
 }
 
 /* Candle */
@@ -49,17 +50,14 @@ body{
   bottom:0;
   left:50%;
   transform:translateX(-50%);
-  width:14px;
-  height:80px;
+  width:14px;height:80px;
   background:#ffd1a9;
 }
 .flame{
   position:absolute;
-  top:-30px;
-  left:50%;
+  top:-30px;left:50%;
   transform:translateX(-50%);
-  width:20px;
-  height:30px;
+  width:20px;height:30px;
   border-radius:50%;
   background:radial-gradient(circle,#fff,#ff9900,#ff3300);
   animation:flicker .15s infinite;
@@ -68,11 +66,10 @@ body{
   50%{transform:translateX(-50%) scale(1.1)}
 }
 
-/* Center */
+/* Center text */
 .center{
   position:absolute;
-  top:45%;
-  left:50%;
+  top:45%;left:50%;
   transform:translate(-50%,-50%);
   text-align:center;
 }
@@ -107,7 +104,7 @@ body{
   100%{transform:translateY(-10vh);opacity:0}
 }
 
-/* Letter */
+/* Letter overlay */
 #wrap{
   position:fixed;
   inset:0;
@@ -116,27 +113,43 @@ body{
   align-items:center;
   justify-content:center;
 }
+
+/* Paper texture */
 #letter{
   width:min(92vw,420px);
-  background:white;
-  color:#3b003b;
+  padding:28px 24px;
   border-radius:16px;
-  padding:20px;
-  font-family:Georgia,serif;
+  background:
+    linear-gradient(transparent 95%, rgba(0,0,0,0.03) 96%),
+    repeating-linear-gradient(
+      #fff,
+      #fff 28px,
+      #f4f4f4 29px
+    );
+  box-shadow:0 20px 40px rgba(0,0,0,.35);
+  color:#3b003b;
+  font-family:'Pacifico', cursive;
 }
-.type{
+
+/* Handwriting animation */
+.handwrite{
+  font-size:1.15rem;
+  line-height:1.9;
   white-space:pre-line;
-  line-height:1.6;
+  opacity:0;
+  animation:ink 6s ease forwards;
 }
-.cursor{
-  display:inline-block;
-  width:6px;
-  height:18px;
-  background:#3b003b;
-  margin-left:2px;
-  animation:blink 1s infinite;
+
+@keyframes ink{
+  from{
+    clip-path:inset(0 100% 0 0);
+    opacity:1;
+  }
+  to{
+    clip-path:inset(0 0 0 0);
+    opacity:1;
+  }
 }
-@keyframes blink{50%{opacity:0}}
 </style>
 </head>
 
@@ -146,19 +159,26 @@ body{
 <div class="moon"></div>
 
 <div class="center">
-  <div class="name">Lala❤️</div>
-  <div class="sub">Lebh you lala</div>
+  <div class="name">lala ❤️</div>
+  <div class="sub">lebh you</div>
   <button class="btn" id="open">💌 Open Love Letter</button>
   <div style="margin-top:10px;font-size:.9rem">Tap anywhere 🎶</div>
 </div>
 
 <div class="candle"><div class="flame"></div></div>
 
-<!-- Love Letter -->
+<!-- Letter -->
 <div id="wrap">
   <div id="letter">
-    <h3> 💖</h3>
-    <div class="type" id="text"></div><span class="cursor"></span>
+    <div class="handwrite" id="text">
+lala meri jaaannn…
+letter me jhat kuch nhi hai 
+ Gaamd dega kya 
+      CHUD 
+ btw lebh you
+
+
+    </div>
   </div>
 </div>
 
@@ -186,7 +206,7 @@ setInterval(()=>{
   setTimeout(()=>f.remove(),9000);
 },400);
 
-/* Music start on first tap */
+/* Music on first tap */
 const music=document.getElementById("music");
 let started=false;
 document.addEventListener("click",()=>{
@@ -197,40 +217,15 @@ document.addEventListener("click",()=>{
   }
 },{once:true});
 
-/* Typewriter + pen sound */
+/* Open letter + pen sound */
 const pen=document.getElementById("pen");
-const msg=`"lala meri jaannn ...
-aadmi to heera hai tu
-mere dil ke sabse kareeb
-par madarchod bada neech hai
-
-par still lebh you lala
-waise bhi lucky bhai ko uss chhinal se fursat nhi hai 
-tu nhi hoga to mera kya hoga ...
-aur ab website close kar de
-warna phone se nikal ke teri gaamd maar dunga "
-— Gaurav ❤️`;
-
-let i=0;
-const box=document.getElementById("text");
-
-function type(){
-  if(i<msg.length){
-    box.textContent+=msg.charAt(i++);
-    setTimeout(type,70);
-  }else{
-    pen.pause();
-  }
-}
-
 document.getElementById("open").onclick=()=>{
   document.getElementById("wrap").style.display="flex";
   pen.volume=0.7;
   pen.play();
-  if(i===0) type();
+  setTimeout(()=>pen.pause(),6000);
 };
 </script>
 
 </body>
 </html>
-
