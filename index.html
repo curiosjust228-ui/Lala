@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>lebh you lala</title>
 
-<!-- Handwritten font -->
 <link href="https://fonts.googleapis.com/css2?family=Homemade+Apple&display=swap" rel="stylesheet">
 
 <style>
@@ -12,37 +11,68 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: radial-gradient(#0b132b, #000);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Homemade Apple', cursive;
   overflow: hidden;
+  background: linear-gradient(#020111, #0b1d3a);
+  font-family: 'Homemade Apple', cursive;
 }
 
-/* intro */
-#intro {
+/* 🌙 Moon */
+#moon {
   position: absolute;
-  inset: 0;
-  background: black;
-  color: pink;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2.2em;
-  cursor: pointer;
-  z-index: 10;
-  animation: fadePulse 2s infinite;
+  top: 50px;
+  right: 70px;
+  width: 140px;
+  height: 140px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 40px rgba(255,255,255,0.8);
 }
 
-@keyframes fadePulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
+/* ❤️ Hearts */
+.heart {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: pink;
+  transform: rotate(45deg);
+  animation: float 8s linear infinite;
+}
+.heart::before,
+.heart::after {
+  content: '';
+  width: 18px;
+  height: 18px;
+  background: pink;
+  border-radius: 50%;
+  position: absolute;
+}
+.heart::before { top: -9px; left: 0; }
+.heart::after { left: -9px; top: 0; }
+
+@keyframes float {
+  0% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(-100vh) rotate(45deg); opacity: 0; }
 }
 
-/* letter container */
+/* 🌸 Flowers */
+.flower {
+  position: absolute;
+  bottom: 0;
+  font-size: 32px;
+  animation: sway 4s ease-in-out infinite;
+}
+@keyframes sway {
+  0%,100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+/* 💌 Letter box */
 #letterBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 85%;
   max-width: 520px;
   background:
@@ -51,107 +81,86 @@ html, body {
   background-size: 100% 32px;
   padding: 35px;
   border-radius: 8px;
-  box-shadow: 0 0 40px rgba(255,200,200,0.6);
-  display: none;
-  z-index: 5;
+  box-shadow: 0 0 40px rgba(255,200,200,0.7);
+  cursor: pointer;
 }
 
-/* text */
 #letterText {
   font-size: 1.1em;
   color: #2c2c2c;
   white-space: pre-wrap;
 }
 
-/* candle glow */
-#candle {
+/* Intro text */
+#tap {
   position: absolute;
-  bottom: 40px;
-  width: 12px;
-  height: 40px;
-  background: #ffd;
-  border-radius: 3px;
-  box-shadow: 0 0 25px orange;
-}
-#flame {
-  position: absolute;
-  top: -14px;
-  left: -6px;
-  width: 24px;
-  height: 24px;
-  background: orange;
-  border-radius: 50%;
-  filter: blur(1px);
-  animation: flicker 0.15s infinite;
-}
-@keyframes flicker {
-  0% { transform: scale(1); }
-  50% { transform: scale(0.9); }
-  100% { transform: scale(1); }
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: pink;
+  font-size: 2em;
+  background: rgba(0,0,0,0.7);
+  z-index: 10;
 }
 </style>
 </head>
 
 <body>
 
-<div id="intro">Tap to open 💌</div>
+<div id="tap">Tap to open letter 💌</div>
 
-<div id="letterBox">
+<div id="moon"></div>
+
+<div id="letterBox" style="display:none;">
   <div id="letterText"></div>
 </div>
 
-<div id="candle">
-  <div id="flame"></div>
-</div>
-
-<!-- Audio -->
-<audio id="music" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2023/03/06/audio_7e7fbb5c16.mp3" type="audio/mpeg">
-</audio>
-
-<audio id="pen">
-  <source src="https://cdn.pixabay.com/download/audio/2022/10/03/audio_0fdbb7c6c5.mp3" type="audio/mpeg">
-</audio>
-
 <script>
+/* ❤️ Hearts create */
+for (let i = 0; i < 30; i++) {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.style.left = Math.random() * 100 + "vw";
+  h.style.animationDuration = (5 + Math.random() * 5) + "s";
+  document.body.appendChild(h);
+}
+
+/* 🌸 Flowers create */
+const flowers = ["🌸","🌺","🌼","🌷"];
+for (let i = 0; i < 12; i++) {
+  const f = document.createElement("div");
+  f.className = "flower";
+  f.textContent = flowers[Math.floor(Math.random()*flowers.length)];
+  f.style.left = (i * 8) + "vw";
+  document.body.appendChild(f);
+}
+
+/* ✍️ Letter typewriter */
 const text = `lala meri jaannn ...
-aadmi to heera hai tu
-mere dil ke sabse kareeb
 
-par sach bolun to
-thoda harami type ka hai 😌
+dekh kya raaha hai Lund lega kya ....
+...........
+CHUD
+`;
 
-par still lebh you lala
-💗`;
-
-const intro = document.getElementById("intro");
+const tap = document.getElementById("tap");
 const box = document.getElementById("letterBox");
 const output = document.getElementById("letterText");
-const music = document.getElementById("music");
-const pen = document.getElementById("pen");
 
 let i = 0;
 
-intro.addEventListener("click", () => {
-  intro.style.display = "none";
+tap.onclick = () => {
+  tap.style.display = "none";
   box.style.display = "block";
+  write();
+};
 
-  music.volume = 0.5;
-  pen.volume = 0.4;
-
-  music.play();
-  writeLetter();
-});
-
-function writeLetter() {
+function write() {
   if (i < text.length) {
     output.textContent += text.charAt(i);
-    if (text.charAt(i) !== " " && text.charAt(i) !== "\n") {
-      pen.currentTime = 0;
-      pen.play();
-    }
     i++;
-    setTimeout(writeLetter, 90);
+    setTimeout(write, 90);
   }
 }
 </script>
