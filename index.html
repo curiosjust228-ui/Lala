@@ -10,114 +10,177 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: "Segoe UI", sans-serif;
+  font-family:"Segoe UI",sans-serif;
+}
+
+/* Loading screen */
+#loader{
+  position:fixed;
+  inset:0;
+  background:#05010d;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:1.8rem;
+  z-index:10;
+  animation: fadeOut 2s ease forwards;
+  animation-delay:3s;
+}
+@keyframes fadeOut{
+  to{opacity:0; visibility:hidden}
 }
 
 body{
   height:100vh;
   overflow:hidden;
-  background: linear-gradient(120deg,#ff9a9e,#fad0c4,#fbc2eb);
-  background-size:300% 300%;
-  animation: bgMove 10s infinite alternate;
+  background: radial-gradient(circle at top,#1b0033,#05010d 70%);
+  color:white;
 }
 
-@keyframes bgMove{
-  0%{background-position:0% 50%}
-  100%{background-position:100% 50%}
+/* Moon */
+.moon{
+  position:absolute;
+  top:40px;
+  right:40px;
+  width:90px;
+  height:90px;
+  background:#fff;
+  border-radius:50%;
+  box-shadow:0 0 40px rgba(255,255,255,0.8);
 }
 
+/* Candle */
+.candle{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:14px;
+  height:80px;
+  background:#ffd1a9;
+}
+.flame{
+  position:absolute;
+  top:-30px;
+  left:50%;
+  transform:translateX(-50%);
+  width:20px;
+  height:30px;
+  background:radial-gradient(circle,#fff,#ff9900,#ff3300);
+  border-radius:50%;
+  animation:flicker 0.15s infinite;
+}
+@keyframes flicker{
+  0%{transform:translateX(-50%) scale(1)}
+  100%{transform:translateX(-50%) scale(1.1)}
+}
+
+/* Center text */
 .center{
   position:absolute;
-  top:50%;
+  top:45%;
   left:50%;
   transform:translate(-50%,-50%);
   text-align:center;
-  color:white;
-  text-shadow:0 0 25px rgba(255,255,255,0.6);
-  animation: fadeIn 2.5s ease;
   z-index:2;
 }
 
-.center h1{
-  font-size:3.2rem;
-  margin-bottom:10px;
+.name{
+  font-size:3.4rem;
+  animation: heartbeat 1.8s infinite;
+  text-shadow:0 0 20px #ff7ad9;
 }
 
-.center p{
+@keyframes heartbeat{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+}
+
+.sub{
+  margin-top:10px;
   font-size:1.3rem;
   opacity:0.9;
-}
-
-@keyframes fadeIn{
-  from{opacity:0; transform:translate(-50%,-40%)}
-  to{opacity:1; transform:translate(-50%,-50%)}
 }
 
 /* Floating hearts */
 .float{
   position:absolute;
-  animation: floatUp linear infinite;
+  animation:floatUp linear infinite;
   pointer-events:none;
 }
-
 @keyframes floatUp{
-  0%{transform:translateY(100vh) scale(0.6); opacity:0}
+  0%{transform:translateY(100vh);opacity:0}
   50%{opacity:1}
-  100%{transform:translateY(-10vh) scale(1.2); opacity:0}
+  100%{transform:translateY(-10vh);opacity:0}
 }
 
-/* Firework particles */
+/* Fireworks */
 .fire{
   position:absolute;
-  font-size:18px;
+  animation:explode 1.2s ease-out forwards;
   pointer-events:none;
-  animation: explode 1.2s ease-out forwards;
 }
-
 @keyframes explode{
-  0%{transform:translate(0,0) scale(0.5); opacity:1}
-  100%{transform:translate(var(--x),var(--y)) scale(1.3); opacity:0}
+  to{transform:translate(var(--x),var(--y));opacity:0}
 }
 </style>
 </head>
 
 <body>
 
+<div id="loader">Loading love… 💖</div>
+
+<div class="moon"></div>
+
 <div class="center">
-  <h1>I Love You</h1>
-  <p>My Princess</p>
-  <p style="font-size:0.9rem; margin-top:10px;">Tap anywhere 💖</p>
+  <div class="name">Avishka ❤️</div>
+  <div class="sub">I love you my princess</div>
+  <div style="font-size:0.9rem;margin-top:10px;">Tap anywhere 🎶</div>
 </div>
 
+<div class="candle">
+  <div class="flame"></div>
+</div>
+
+<!-- Romantic music -->
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_5f3bfcfa8f.mp3" type="audio/mpeg">
+</audio>
+
 <script>
-/* Floating background hearts */
-const floatEmojis = ["❤️","🌸","💖","🌹","✨"];
+/* Floating hearts */
+const floats=["❤️","✨","🌸","💖"];
 setInterval(()=>{
-  const f = document.createElement("div");
+  const f=document.createElement("div");
   f.className="float";
-  f.innerText = floatEmojis[Math.floor(Math.random()*floatEmojis.length)];
-  f.style.left = Math.random()*100+"vw";
-  f.style.fontSize = (18+Math.random()*28)+"px";
-  f.style.animationDuration = (5+Math.random()*4)+"s";
+  f.innerText=floats[Math.floor(Math.random()*floats.length)];
+  f.style.left=Math.random()*100+"vw";
+  f.style.fontSize=(18+Math.random()*25)+"px";
+  f.style.animationDuration=(6+Math.random()*4)+"s";
   document.body.appendChild(f);
   setTimeout(()=>f.remove(),9000);
-},350);
+},400);
 
-/* Cute fireworks on click */
-const fireEmojis = ["❤️","💖","✨","🌸"];
+/* Music + fireworks on first tap */
+let started=false;
+document.addEventListener("click",e=>{
+  if(!started){
+    document.getElementById("music").play();
+    started=true;
+  }
 
-document.addEventListener("click",(e)=>{
-  for(let i=0;i<18;i++){
-    const p = document.createElement("div");
+  for(let i=0;i<16;i++){
+    const p=document.createElement("div");
     p.className="fire";
-    p.innerText = fireEmojis[Math.floor(Math.random()*fireEmojis.length)];
-    p.style.left = e.clientX+"px";
-    p.style.top = e.clientY+"px";
+    p.innerText=floats[Math.floor(Math.random()*floats.length)];
+    p.style.left=e.clientX+"px";
+    p.style.top=e.clientY+"px";
 
-    const angle = Math.random()*2*Math.PI;
-    const distance = 60 + Math.random()*60;
-    p.style.setProperty("--x", Math.cos(angle)*distance+"px");
-    p.style.setProperty("--y", Math.sin(angle)*distance+"px");
+    const a=Math.random()*2*Math.PI;
+    const d=60+Math.random()*60;
+    p.style.setProperty("--x",Math.cos(a)*d+"px");
+    p.style.setProperty("--y",Math.sin(a)*d+"px");
 
     document.body.appendChild(p);
     setTimeout(()=>p.remove(),1200);
