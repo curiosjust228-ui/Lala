@@ -23,11 +23,8 @@ body{
 #loader{
   position:fixed;inset:0;
   background:#05010d;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.8rem;
-  z-index:10;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;z-index:10;
   animation:fade 2s ease forwards;
   animation-delay:3s;
 }
@@ -35,41 +32,30 @@ body{
 
 /* Moon */
 .moon{
-  position:absolute;
-  top:40px;
-  right:40px;
-  width:90px;height:90px;
+  position:absolute;top:40px;right:40px;
+  width:90px;height:90px;border-radius:50%;
   background:#fff;
-  border-radius:50%;
   box-shadow:0 0 40px rgba(255,255,255,.8);
 }
 
 /* Candle */
 .candle{
-  position:absolute;
-  bottom:0;
-  left:50%;
+  position:absolute;bottom:0;left:50%;
   transform:translateX(-50%);
-  width:14px;height:80px;
-  background:#ffd1a9;
+  width:14px;height:80px;background:#ffd1a9;
 }
 .flame{
-  position:absolute;
-  top:-30px;left:50%;
+  position:absolute;top:-30px;left:50%;
   transform:translateX(-50%);
-  width:20px;height:30px;
-  border-radius:50%;
+  width:20px;height:30px;border-radius:50%;
   background:radial-gradient(circle,#fff,#ff9900,#ff3300);
   animation:flicker .15s infinite;
 }
-@keyframes flicker{
-  50%{transform:translateX(-50%) scale(1.1)}
-}
+@keyframes flicker{50%{transform:translateX(-50%) scale(1.1)}}
 
-/* Center text */
+/* Center */
 .center{
-  position:absolute;
-  top:45%;left:50%;
+  position:absolute;top:45%;left:50%;
   transform:translate(-50%,-50%);
   text-align:center;
 }
@@ -83,19 +69,15 @@ body{
 
 .btn{
   margin-top:18px;
-  padding:10px 18px;
-  border-radius:999px;
-  border:0;
+  padding:10px 18px;border-radius:999px;border:0;
   cursor:pointer;
   background:linear-gradient(135deg,#ff7ad9,#ffd1a9);
-  color:#2b0033;
-  font-weight:600;
+  color:#2b0033;font-weight:600;
 }
 
 /* Floating hearts */
 .float{
-  position:absolute;
-  pointer-events:none;
+  position:absolute;pointer-events:none;
   animation:floatUp linear infinite;
 }
 @keyframes floatUp{
@@ -106,50 +88,41 @@ body{
 
 /* Letter overlay */
 #wrap{
-  position:fixed;
-  inset:0;
+  position:fixed;inset:0;
   background:rgba(0,0,0,.6);
-  display:none;
-  align-items:center;
-  justify-content:center;
+  display:none;align-items:center;justify-content:center;
 }
 
 /* Paper texture */
 #letter{
   width:min(92vw,420px);
-  padding:28px 24px;
-  border-radius:16px;
+  padding:28px 24px;border-radius:16px;
   background:
-    linear-gradient(transparent 95%, rgba(0,0,0,0.03) 96%),
+    linear-gradient(transparent 96%, rgba(0,0,0,.03) 97%),
     repeating-linear-gradient(
       #fff,
       #fff 28px,
-      #f4f4f4 29px
+      #f2f2f2 29px
     );
   box-shadow:0 20px 40px rgba(0,0,0,.35);
   color:#3b003b;
   font-family:'Pacifico', cursive;
 }
 
-/* Handwriting animation */
-.handwrite{
+/* Handwritten text */
+#text{
   font-size:1.15rem;
   line-height:1.9;
   white-space:pre-line;
-  opacity:0;
-  animation:ink 6s ease forwards;
 }
-
-@keyframes ink{
-  from{
-    clip-path:inset(0 100% 0 0);
-    opacity:1;
-  }
-  to{
-    clip-path:inset(0 0 0 0);
-    opacity:1;
-  }
+.cursor{
+  display:inline-block;
+  width:6px;height:18px;
+  background:#3b003b;
+  margin-left:2px;
+  animation:blink 1s infinite;
 }
+@keyframes blink{50%{opacity:0}}
 </style>
 </head>
 
@@ -170,15 +143,7 @@ body{
 <!-- Letter -->
 <div id="wrap">
   <div id="letter">
-    <div class="handwrite" id="text">
-lala meri jaaannn…
-letter me jhat kuch nhi hai 
- Gaamd dega kya 
-      CHUD 
- btw lebh you
-
-
-    </div>
+    <div id="text"></div><span class="cursor"></span>
   </div>
 </div>
 
@@ -217,13 +182,35 @@ document.addEventListener("click",()=>{
   }
 },{once:true});
 
-/* Open letter + pen sound */
+/* Letter-by-letter handwriting */
+const msg=`lala meri jaaannn…
+
+
+.................
+aaja lund lele bsdwale 
+CHUD
+
+const box=document.getElementById("text");
 const pen=document.getElementById("pen");
+let i=0, writing=false;
+
+function writeSlow(){
+  if(i<msg.length){
+    box.textContent+=msg.charAt(i++);
+    setTimeout(writeSlow,90); // speed control (bada = slow)
+  }else{
+    pen.pause();
+  }
+}
+
 document.getElementById("open").onclick=()=>{
   document.getElementById("wrap").style.display="flex";
-  pen.volume=0.7;
-  pen.play();
-  setTimeout(()=>pen.pause(),6000);
+  if(!writing){
+    writing=true;
+    pen.volume=0.7;
+    pen.play();
+    writeSlow();
+  }
 };
 </script>
 
