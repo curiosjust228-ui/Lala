@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Love ❤️</title>
+
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+
+  body {
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ffd6e8, #fff0f5);
+    font-family: 'Segoe Script', 'Comic Sans MS', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  .container {
+    text-align: center;
+    z-index: 2;
+    animation: fadeIn 3s ease forwards;
+  }
+
+
+  h1 {
+    font-size: 3rem;
+    color: #d6336c;
+    text-shadow: 0 0 10px rgba(214, 51, 108, 0.3);
+  }
+
+
+  .subtitle {
+    margin-top: 10px;
+    font-size: 1.2rem;
+    color: #8a2d52;
+    opacity: 0.8;
+  }
+
+
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+</head>
+
+
+<body>
+
+
+<canvas id="bg"></canvas>
+
+
+<div class="container">
+  <h1>I love you, my princess ❤️</h1>
+  <div class="subtitle">Forever & Always</div>
+</div>
+
+
+<script>
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+
+// particles (hearts & petals)
+let particles = [];
+const emojis = ["❤️", "🌸", "💖", "🌷"];
+
+
+for (let i = 0; i < 60; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: Math.random() * 20 + 15,
+    speed: Math.random() * 0.5 + 0.2,
+    emoji: emojis[Math.floor(Math.random() * emojis.length)],
+    opacity: Math.random()
+  });
+}
+
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+  particles.forEach(p => {
+    ctx.globalAlpha = p.opacity;
+    ctx.font = `${p.size}px serif`;
+    ctx.fillText(p.emoji, p.x, p.y);
+
+
+    p.y -= p.speed;
+    p.opacity -= 0.002;
+
+
+    if (p.y < -50 || p.opacity <= 0) {
+      p.y = canvas.height + 50;
+      p.x = Math.random() * canvas.width;
+      p.opacity = 1;
+    }
+  });
+
+
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(animate);
+}
+
+
+animate();
+</script>
+
+
+</body>
+</html>
