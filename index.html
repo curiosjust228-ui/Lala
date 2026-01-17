@@ -5,18 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>lala ❤️</title>
 
-<!-- Handwritten font -->
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-
 body{
-  height:100vh;
-  overflow:hidden;
+  height:100vh;overflow:hidden;
   background:radial-gradient(circle at top,#1b0033,#05010d 70%);
-  font-family:"Segoe UI",sans-serif;
-  color:white;
+  color:white;font-family:"Segoe UI",sans-serif;
 }
 
 /* Loader */
@@ -26,7 +22,7 @@ body{
   display:flex;align-items:center;justify-content:center;
   font-size:1.8rem;z-index:10;
   animation:fade 2s ease forwards;
-  animation-delay:3s;
+  animation-delay:2.5s;
 }
 @keyframes fade{to{opacity:0;visibility:hidden}}
 
@@ -75,17 +71,6 @@ body{
   color:#2b0033;font-weight:600;
 }
 
-/* Floating hearts */
-.float{
-  position:absolute;pointer-events:none;
-  animation:floatUp linear infinite;
-}
-@keyframes floatUp{
-  0%{transform:translateY(100vh);opacity:0}
-  50%{opacity:1}
-  100%{transform:translateY(-10vh);opacity:0}
-}
-
 /* Letter overlay */
 #wrap{
   position:fixed;inset:0;
@@ -93,12 +78,11 @@ body{
   display:none;align-items:center;justify-content:center;
 }
 
-/* Paper texture */
+/* Paper */
 #letter{
   width:min(92vw,420px);
-  padding:28px 24px;border-radius:16px;
+  padding:26px 22px;border-radius:16px;
   background:
-    linear-gradient(transparent 96%, rgba(0,0,0,.03) 97%),
     repeating-linear-gradient(
       #fff,
       #fff 28px,
@@ -109,17 +93,14 @@ body{
   font-family:'Pacifico', cursive;
 }
 
-/* Handwritten text */
 #text{
   font-size:1.15rem;
   line-height:1.9;
   white-space:pre-line;
 }
 .cursor{
-  display:inline-block;
-  width:6px;height:18px;
-  background:#3b003b;
-  margin-left:2px;
+  display:inline-block;width:6px;height:18px;
+  background:#3b003b;margin-left:2px;
   animation:blink 1s infinite;
 }
 @keyframes blink{50%{opacity:0}}
@@ -135,71 +116,66 @@ body{
   <div class="name">lala ❤️</div>
   <div class="sub">lebh you</div>
   <button class="btn" id="open">💌 Open Love Letter</button>
-  <div style="margin-top:10px;font-size:.9rem">Tap anywhere 🎶</div>
+  <div style="margin-top:10px;font-size:.9rem">Tap screen once 🔊</div>
 </div>
 
 <div class="candle"><div class="flame"></div></div>
 
-<!-- Letter -->
 <div id="wrap">
   <div id="letter">
     <div id="text"></div><span class="cursor"></span>
   </div>
 </div>
 
-<!-- Romantic tune -->
-<audio id="music" loop>
-  <source src="https://cdn.pixabay.com/audio/2023/06/07/audio_4c6d5b5b57.mp3" type="audio/mpeg">
+<!-- AUDIO (LOCAL-LIKE, RELIABLE SOURCES) -->
+<audio id="music" preload="auto">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/09/audio_8d16c5d6cc.mp3?filename=romantic-piano-soft-ambient-110624.mp3">
 </audio>
 
-<!-- Pen scratching -->
-<audio id="pen" loop>
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_4a4d0a7e4c.mp3" type="audio/mpeg">
+<audio id="pen" preload="auto">
+  <source src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_21c0e8c2b2.mp3?filename=pen-writing-6070.mp3">
 </audio>
 
 <script>
-/* Floating hearts */
-const icons=["❤️","✨","🌸","💖"];
-setInterval(()=>{
-  const f=document.createElement("div");
-  f.className="float";
-  f.innerText=icons[Math.floor(Math.random()*icons.length)];
-  f.style.left=Math.random()*100+"vw";
-  f.style.fontSize=(18+Math.random()*25)+"px";
-  f.style.animationDuration=(6+Math.random()*4)+"s";
-  document.body.appendChild(f);
-  setTimeout(()=>f.remove(),9000);
-},400);
-
-/* Music on first tap */
+/* Unlock audio */
+let unlocked=false;
 const music=document.getElementById("music");
-let started=false;
+const pen=document.getElementById("pen");
+
 document.addEventListener("click",()=>{
-  if(!started){
-    music.volume=0.5;
-    music.play();
-    started=true;
+  if(!unlocked){
+    music.volume=0.4;
+    music.loop=true;
+    music.play().catch(()=>{});
+    unlocked=true;
   }
 },{once:true});
 
-/* Letter-by-letter handwriting */
+/* Letter writing */
 const msg=`lala meri jaaannn…
 
+aadmi to heera hai tu,
+mere dil ke sabse kareeb rehta hai,
+thoda drama bhi karta hai 😌
 
-.................
-aaja lund lele bsdwale 
-CHUD
+ladta hai,
+gussa dikhata hai,
+par phir bhi dil maanta nahi.
+
+isliye zyada udd mat,
+par haan…
+lebh you lala ❤️`;
 
 const box=document.getElementById("text");
-const pen=document.getElementById("pen");
 let i=0, writing=false;
 
-function writeSlow(){
+function write(){
   if(i<msg.length){
     box.textContent+=msg.charAt(i++);
-    setTimeout(writeSlow,90); // speed control (bada = slow)
-  }else{
-    pen.pause();
+    pen.currentTime=0;
+    pen.volume=0.8;
+    pen.play().catch(()=>{});
+    setTimeout(write,100);
   }
 }
 
@@ -207,9 +183,7 @@ document.getElementById("open").onclick=()=>{
   document.getElementById("wrap").style.display="flex";
   if(!writing){
     writing=true;
-    pen.volume=0.7;
-    pen.play();
-    writeSlow();
+    write();
   }
 };
 </script>
